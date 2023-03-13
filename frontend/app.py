@@ -9,10 +9,18 @@ from scipy.io import wavfile
 st.markdown(f"<h1 style='text-align: center;'> 🤖 Music Generator 🤖 </h1>", unsafe_allow_html=True)
 style = st.sidebar.selectbox(
         "🎹 Select your style 🎸",
-        ("Daft Punk", "J.S. Bach", "Britney Spears"))
-temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.1, 1.5, 0.01)
+        ("🤌 Italo Disco", 
+         "🇯🇵 Japan pop",
+         "🎻 Piano Guitar Bass",
+         "🌊 Marimba",
+         "🔌💻 Techno",
+         "🏎️ Mario Kart",
+         "💃 Latin Music"))
+temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.01, 1.5, 0.01)
 bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 
+style2 = "_".join().lower(style)
+temperature2 = temperature * 10 
 url = ''
 params = {
 "style": style,
