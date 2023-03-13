@@ -10,15 +10,17 @@ from magenta.models.music_vae.trained_model import TrainedModel
 from magenta.music import concatenate_sequences
 from starlette.responses import Response
 
+
 app = FastAPI()
 
-list_sf2 = {"italo_disco": "/content/drive/MyDrive/Colab_Notebooks/Soundfont/Super_Italo_DiscoFont_Director_s_Cut.sf2",
-            "japan_pop": "/content/drive/MyDrive/Colab_Notebooks/Soundfont/Japan_Herentals.sf2",
-            "piano_guitar_bass": "/content/drive/MyDrive/Colab_Notebooks/Soundfont/SGM-v2.01-NicePianosGuitarsBass-V1.2.sf2",
-            "marimba": "/content/drive/MyDrive/Colab_Notebooks/Soundfont/Versilian_Studios_Marimba.sf2",
-            "techno": "/content/drive/MyDrive/Colab_Notebooks/Soundfont/20_synths.sf2",
-            "mario_kart":  "/content/drive/MyDrive/Colab_Notebooks/Soundfont/Mario_Kart_Collection.sf2",
-            "latin_music":  "/content/drive/MyDrive/Colab_Notebooks/Soundfont/Escudero_Piano_M1.sf2"}
+list_sf2 = {"italo_disco": "gs://wagon_human_bucket/sf2/Super_Italo_DiscoFont_Director_s_Cut.sf2",
+            "japan_pop": "gs://wagon_human_bucket/sf2/Japan_Herentals.sf2",
+            "piano_guitar_bass": "gs://wagon_human_bucket/sf2/SGM-v2.01-NicePianosGuitarsBass-V1.2.sf2",
+            "marimba": "gs://wagon_human_bucket/sf2/Versilian_Studios_Marimba.sf2",
+            "techno": "gs://wagon_human_bucket/sf2/20_synths.sf2",
+            "mario_kart":  "gs://wagon_human_bucket/sf2/Mario_Kart_Collection.sf2",
+            "latin_music":  "gs://wagon_human_bucket/sf2/Escudero_Piano_M1.sf2"}
+
 
 BATCH_SIZE = 32
 Z_SIZE = 512
@@ -35,7 +37,7 @@ SAMPLE_RATE = 44500
 config = configs.CONFIG_MAP['hierdec-trio_16bar']
 
 #hierdec-trio_16bar
-model = TrainedModel(config, batch_size=BATCH_SIZE, checkpoint_dir_or_path = BASE_DIR+'/checkpoints/trio_16bar_hierdec.ckpt')
+model = TrainedModel(config, batch_size=BATCH_SIZE, checkpoint_dir_or_path = "gs://download.magenta.tensorflow.org/models/music_vae/colab2" + '/checkpoints/trio_16bar_hierdec.ckpt')
 
 model._config.data_converter._max_tensors_per_input = None
 
@@ -77,8 +79,8 @@ def fix_instruments_for_concatenation(note_sequences):
       else:
         note.instrument = 9
 
-@app.post("/generate_music")
-async def generate(style: str, num_bars: int = 48, temperature: float = 1):
+@app.get("/generate_music")
+async def generate_music(style: str, num_bars: int = 48, temperature: float = 1):
     z1 = np.random.normal(size=[Z_SIZE])
     z2 = np.random.normal(size=[Z_SIZE])
     z = np.array([slerp(z1, z2, t)
@@ -94,3 +96,10 @@ async def generate(style: str, num_bars: int = 48, temperature: float = 1):
     # mm.plot_sequence(interp_ns)
 
     return Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
+
+@app.get("/")
+async def root():
+    result = {
+        'dumb': 'Hello'
+    }
+    return result

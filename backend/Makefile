@@ -21,7 +21,7 @@ DOCKER_IMAGE_NAME=zikos
 GCR_MULTI_REGION=eu.gcr.io
 
 # https://cloud.google.com/compute/docs/regions-zones#available
-REGION=eu-west-4
+REGION=eu-west-1
 
 build_gcr_image:
 	docker build -t $(GCR_MULTI_REGION)/$(GCP_PROJECT_ID)/$(DOCKER_IMAGE_NAME) .
