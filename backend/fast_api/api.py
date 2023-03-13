@@ -79,7 +79,7 @@ def fix_instruments_for_concatenation(note_sequences):
       else:
         note.instrument = 9
 
-@app.get("/generate_music")
+@app.get("/generate_music") #http://localhost:8080/generate_music?style=italo_disco&num_bars=20&temperature=1
 async def generate_music(style: str, num_bars: int = 48, temperature: float = 1):
     z1 = np.random.normal(size=[Z_SIZE])
     z2 = np.random.normal(size=[Z_SIZE])
@@ -94,10 +94,14 @@ async def generate_music(style: str, num_bars: int = 48, temperature: float = 1)
 
     # play(interp_ns)
     # mm.plot_sequence(interp_ns)
-    test={
-        "Salut" : "Guillaume"
-        }
-    #return interp_ns #Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
+    #for i in seqs:
+     #   a=str(i.notes[0])
+      #  break
+    #test = {"Salut" : a}
+    a = str(seqs)
+    test = {"test" : a }
+
+    return test #interp_ns #Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
 
 @app.get("/")
 async def root():
