@@ -13,7 +13,7 @@ docker_run:
 
 ##### GCP - - - - - - - - - - - - - - - - - - - - - - - - -
 
-GCP_PROJECT_ID=metamot
+GCP_PROJECT_ID=human-380116
 
 DOCKER_IMAGE_NAME=zikos
 
