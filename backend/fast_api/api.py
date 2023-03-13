@@ -94,8 +94,10 @@ async def generate_music(style: str, num_bars: int = 48, temperature: float = 1)
 
     # play(interp_ns)
     # mm.plot_sequence(interp_ns)
-
-    return Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
+    test={
+        "Salut" : "Guillaume"
+        }
+    #return interp_ns #Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
 
 @app.get("/")
 async def root():
