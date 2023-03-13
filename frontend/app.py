@@ -10,7 +10,7 @@ st.markdown(f"<h1 style='text-align: center;'> 🤖 Music Generator 🤖 </h1>",
 style = st.sidebar.selectbox(
         "🎹 Select your style 🎸",
         ("Daft Punk", "J.S. Bach", "Britney Spears"))
-temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.1, 1.0, 0.01)
+temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.1, 1.5, 0.01)
 bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 
 url = ''
