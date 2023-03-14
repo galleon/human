@@ -4,6 +4,7 @@ import requests
 import streamlit as st
 import pygame
 import json
+import mido
 
 st.set_page_config(
         page_title="MIDI to WAV",
