@@ -19,16 +19,18 @@ style = st.sidebar.selectbox(
 temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.01, 1.5, 0.01)
 bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 
-#style2 = "_".join().lower(style)
+style2 = "_".join().lower(style)
 temperature2 = temperature * 10 
-url = ''
+url = 'https://zikosv1-22biky57hq-ew.a.run.app/generate_music'
 params = {
 "style": style,
-"temperature":temperature,
-"bars":bars}
+"nb_bars":bars,
+"temperature":temperature
+}
 
 
-response = requests.get(url, params)
+response = requests.get(url, params).json()
+print(response)
 # fare = round(response.json()['fare'])
 
 st.markdown(f'# Nothing to show here yet :)')
