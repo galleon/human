@@ -14,8 +14,9 @@ six
 # sound
 soundfile
 mido
-pretty-midi
+pygame
 pyfluidsynth
+
 
 # web
 streamlit
