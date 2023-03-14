@@ -18,3 +18,4 @@ uvicorn
 magenta==2.0.1
 pretty_midi
 pyfluidsynth
+note-seq

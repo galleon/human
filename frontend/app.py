@@ -13,7 +13,7 @@ st.set_page_config(
 st.markdown(f"<h1 style='text-align: center;'> 🤖 Music Generator 🤖 </h1>", unsafe_allow_html=True)
 style = st.sidebar.selectbox(
         "🎹 Select your style 🎸",
-        ("🤌 Italo Disco", 
+        ("🤌 Italo Disco",
          "🇯🇵 Japan pop",
          "🎻 Piano Guitar Bass",
          "🌊 Marimba",
@@ -24,7 +24,7 @@ temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.01, 1.5, 0.01)
 bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 
 style2 = "_".join(style.lower())
-temperature2 = temperature * 10 
+temperature2 = temperature * 10
 url = 'https://zikosv1-22biky57hq-ew.a.run.app/generate_music'
 params = {
 "style": style,

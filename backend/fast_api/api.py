@@ -9,6 +9,9 @@ from magenta.models.music_vae import configs
 from magenta.models.music_vae.trained_model import TrainedModel
 from magenta.music import concatenate_sequences
 from starlette.responses import Response
+from magenta.music.midi_io import note_sequence_to_midi_file
+
+
 
 
 app = FastAPI()
