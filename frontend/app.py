@@ -26,7 +26,7 @@ bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 style2 = "_".join(style.lower())
 temperature2 = temperature * 10
 
-url = 'https://zikosv1-22biky57hq-ew.a.run.app/generate_music'
+url = 'https://human-22biky57hq-ew.a.run.app'
 params = {
 "style": style,
 "nb_bars":bars,
