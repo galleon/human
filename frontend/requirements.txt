@@ -22,3 +22,4 @@ pyfluidsynth
 streamlit
 requests
 python-dotenv
+pretty-midi

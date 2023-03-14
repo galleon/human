@@ -5,6 +5,8 @@ import streamlit as st
 import pygame
 import json
 import mido
+import pretty_midi
+from IPython.display import Audio, display
 
 st.set_page_config(
         page_title="🔥",
@@ -33,7 +35,26 @@ params = {
 "temperature":temperature
 }
 
+#loop pour récupérer un fichier pretty-midi depuis un dict
 
+
+def json_to_midi(json_data):
+    for track_name, track_info in json_data.items():
+        # créer une instance de pretty_midi.Instrument()
+        instr = pretty_midi.Instrument(program=track_info['program'], is_drum=track_info['is_drum'])
+        # ajouter les notes à l'instrument
+        for note_info in track_info['notes']:
+            note = pretty_midi.Note(
+                velocity=note_info['velocity'],
+                pitch=note_info['pitch'],
+                start=note_info['start'],
+                end=note_info['end']
+            )
+            instr.notes.append(note)
+            # ajouter l'instrument au fichier midi
+        midi_data.instruments.append(instr)
+    return midi_data
+'''
 def json_to_midi(json_data):
     # Create MIDI file
     midi_data = mido.MidiFile(type=0)
@@ -49,6 +70,7 @@ def json_to_midi(json_data):
             track.append(msg)
 
     return midi_data
+'''
 
 with st.spinner(f"Fetching Request"):
         response = requests.get(url, params).json()
@@ -59,6 +81,5 @@ with st.spinner(f"Turning JSON to MIDI..."):
 with st.spinner(f"Loading MIDI player"):
         pygame.mixer.init()
 
-if st.button('Play MIDI'):
-    pygame.mixer.music.load(midi_data)
-    pygame.mixer.music.play()
+audio_data=midi_data.synthesize()
+display(Audio(audio_data,rate=44000))
