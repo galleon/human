@@ -4,7 +4,6 @@ setuptools>=26
 twine
 wheel>=0.29
 scipy
-json
 
 # data science
 six
