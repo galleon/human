@@ -19,7 +19,7 @@ style = st.sidebar.selectbox(
 temperature = st.sidebar.slider('🌶️ Spice levels 🌶️', 0.01, 1.5, 0.01)
 bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 
-style2 = "_".join().lower(style)
+#style2 = "_".join().lower(style)
 temperature2 = temperature * 10 
 url = ''
 params = {
