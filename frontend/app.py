@@ -33,7 +33,8 @@ params = {
 }
 
 def json_to_midi(json_data):
-    midi_messages = [mido.Message.from_dict(message) for message in json.loads(json_data)]
+    json_data2 = json.dumps(json_data)
+    midi_messages = [mido.Message.from_dict(message) for message in json.loads(json_data2)]
     midi_data = mido.MidiFile()
     midi_data.tracks.append(mido.MidiTrack(midi_messages))
     return midi_data
