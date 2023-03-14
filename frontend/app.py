@@ -1,12 +1,15 @@
 
+import io
+import json
+
+import mido
 import numpy as np
+import pretty_midi
+import pygame
 import requests
 import streamlit as st
-import pygame
-import json
-import mido
-import pretty_midi
 from IPython.display import Audio, display
+from scipy.io import wavfile
 
 st.set_page_config(
         page_title="🔥",
@@ -28,7 +31,7 @@ bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 style2 = "_".join(style.lower())
 temperature2 = temperature * 10
 
-url = 'https://human-22biky57hq-ew.a.run.app'
+url = 'https://human-22biky57hq-ew.a.run.app/generate_music'
 params = {
 "style": style,
 "nb_bars":bars,
@@ -39,6 +42,7 @@ params = {
 
 
 def json_to_midi(json_data):
+    midi_data = pretty_midi.PrettyMIDI()
     for track_name, track_info in json_data.items():
         # créer une instance de pretty_midi.Instrument()
         instr = pretty_midi.Instrument(program=track_info['program'], is_drum=track_info['is_drum'])
@@ -54,32 +58,45 @@ def json_to_midi(json_data):
             # ajouter l'instrument au fichier midi
         midi_data.instruments.append(instr)
     return midi_data
-'''
-def json_to_midi(json_data):
-    # Create MIDI file
-    midi_data = mido.MidiFile(type=0)
 
-    # Add tracks to MIDI file
-    for track_data in json_data['tracks']:
-        track = mido.MidiTrack()
-        midi_data.tracks.append(track)
+# def json_to_midi(json_data):
+#     # Create MIDI file
+#     midi_data = mido.MidiFile(type=0)
 
-        # Add messages to track
-        for msg_data in track_data['messages']:
-            msg = mido.Message.from_dict(msg_data)
-            track.append(msg)
+#     # Add tracks to MIDI file
+#     for track_data in json_data['tracks']:
+#         track = mido.MidiTrack()
+#         midi_data.tracks.append(track)
 
-    return midi_data
-'''
+#         # Add messages to track
+#         for msg_data in track_data['messages']:
+#             msg = mido.Message.from_dict(msg_data)
+#             track.append(msg)
+
+#     return midi_data
 
 with st.spinner(f"Fetching Request"):
         response = requests.get(url, params).json()
 
+st.write(response)
+
 with st.spinner(f"Turning JSON to MIDI..."):
         midi_data = json_to_midi(response)
+        midi_data.write('output.mid')
 
-with st.spinner(f"Loading MIDI player"):
-        pygame.mixer.init()
+# with st.spinner(f"Loading MIDI player"):
+#         pygame.mixer.init()
 
-audio_data=midi_data.synthesize()
-display(Audio(audio_data,rate=44000))
+# audio_data=midi_data.synthesize()
+# display(Audio(audio_data, rate=44000))
+
+with st.spinner(f"Transcribing to FluidSynth"):
+    audio_data = midi_data.fluidsynth()
+    audio_data = np.int16(
+        audio_data / np.max(np.abs(audio_data)) * 32767 * 0.9
+    )  # -- Normalize for 16 bit audio https://github.com/jkanner/streamlit-audio/blob/main/helper.py
+
+    virtualfile = io.BytesIO()
+    wavfile.write(virtualfile, 44100, audio_data)
+
+st.audio(virtualfile)
