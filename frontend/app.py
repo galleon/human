@@ -33,10 +33,21 @@ params = {
 "temperature":temperature
 }
 
+
 def json_to_midi(json_data):
-    midi_messages = [mido.Message.from_dict(message) for message in json.dumps(json_data)]
-    midi_data = mido.MidiFile()
-    midi_data.tracks.append(mido.MidiTrack(midi_messages))
+    # Create MIDI file
+    midi_data = mido.MidiFile(type=0)
+
+    # Add tracks to MIDI file
+    for track_data in json_data['tracks']:
+        track = mido.MidiTrack()
+        mid.tracks.append(track)
+
+        # Add messages to track
+        for msg_data in track_data['messages']:
+            msg = mido.Message.from_dict(msg_data)
+            track.append(msg)
+                
     return midi_data
 
 with st.spinner(f"Fetching Request"):
