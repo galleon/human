@@ -41,21 +41,21 @@ def json_to_midi(json_data):
     # Add tracks to MIDI file
     for track_data in json_data['tracks']:
         track = mido.MidiTrack()
-        mid.tracks.append(track)
+        midi_data.tracks.append(track)
 
         # Add messages to track
         for msg_data in track_data['messages']:
             msg = mido.Message.from_dict(msg_data)
             track.append(msg)
-                
+
     return midi_data
 
 with st.spinner(f"Fetching Request"):
         response = requests.get(url, params).json()
-        
+
 with st.spinner(f"Turning JSON to MIDI..."):
         midi_data = json_to_midi(response)
-       
+
 with st.spinner(f"Loading MIDI player"):
         pygame.mixer.init()
 
