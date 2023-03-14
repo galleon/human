@@ -44,6 +44,11 @@ model = TrainedModel(config, batch_size=BATCH_SIZE, checkpoint_dir_or_path = "gs
 
 model._config.data_converter._max_tensors_per_input = None
 
+# Convertir un fichier MIDI en JSON
+def midi_to_json(midi_file):
+    midi_data = mido.MidiFile(midi_file)
+    json_data = [message.dict() for message in midi_data]
+    return json.dumps(json_data)
 
 # Spherical linear interpolation.
 def slerp(p0, p1, t):
@@ -95,16 +100,11 @@ async def generate_music(style: str, num_bars: int = 48, temperature: float = 1)
     fix_instruments_for_concatenation(seqs)
     interp_ns = concatenate_sequences(seqs)
 
-    # play(interp_ns)
-    # mm.plot_sequence(interp_ns)
-    #for i in seqs:
-     #   a=str(i.notes[0])
-      #  break
-    #test = {"Salut" : a}
-#     a = str(seqs)
-#     test = {"test" : a }
+    midi_file = note_sequence_to_midi_file(interp_ns)
+            
+    suntzu = midi_to_json(midi_file)
 
-    return seqs #interp_ns #Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
+    return suntzu
 
 @app.get("/")
 async def root():
