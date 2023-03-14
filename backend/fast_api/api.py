@@ -100,7 +100,7 @@ async def generate_music(style: str, num_bars: int = 48, temperature: float = 1)
     fix_instruments_for_concatenation(seqs)
     interp_ns = concatenate_sequences(seqs)
 
-    midi_file = note_sequence_to_midi_file(interp_ns)
+     midi_file = note_sequence_to_midi_file(interp_ns, "output.mid")
             
     suntzu = midi_to_json(midi_file)
 
