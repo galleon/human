@@ -1,10 +1,8 @@
-import io
 
 import numpy as np
-import pretty_midi
 import requests
 import streamlit as st
-from scipy.io import wavfile
+import pygame
 
 st.set_page_config(
         page_title="MIDI to WAV",
@@ -25,20 +23,29 @@ bars = st.sidebar.select_slider('How many bars?', options=[4, 8, 16])
 
 style2 = "_".join(style.lower())
 temperature2 = temperature * 10
+
 url = 'https://zikosv1-22biky57hq-ew.a.run.app/generate_music'
 params = {
 "style": style,
 "nb_bars":bars,
 "temperature":temperature
 }
+
+def json_to_midi(json_data):
+    midi_messages = [mido.Message.from_dict(message) for message in json.loads(json_data)]
+    midi_data = mido.MidiFile()
+    midi_data.tracks.append(mido.MidiTrack(midi_messages))
+    return midi_data
+
 with st.spinner(f"Fetching Request"):
         response = requests.get(url, params).json()
-with st.spinner(f"Transcribing to FluidSynth"):
-        midi_data = pretty_midi.PrettyMIDI(response)
-        audio_data = midi_data.fluidsynth()
-        audio_data = np.int16(
-            audio_data / np.max(np.abs(audio_data)) * 32767 * 0.9
-        )
-        virtualfile = io.BytesIO()
-        wavfile.write(virtualfile, 44100, audio_data)
-st.audio(virtualfile)
+        
+with st.spinner(f"Turning JSON to MIDI..."):
+        midi_data = json_to_midi(response)
+       
+with st.spinner(f"Loading MIDI player"):
+        pygame.mixer.init()
+
+if st.button('Play MIDI'):
+    pygame.mixer.music.load(midi_data)
+    pygame.mixer.music.play()
