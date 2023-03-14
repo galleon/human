@@ -6,6 +6,10 @@ import requests
 import streamlit as st
 from scipy.io import wavfile
 
+st.set_page_config(
+        page_title="MIDI to WAV",
+        page_icon="musical_note",
+        initial_sidebar_state="collapsed")
 st.markdown(f"<h1 style='text-align: center;'> 🤖 Music Generator 🤖 </h1>", unsafe_allow_html=True)
 style = st.sidebar.selectbox(
         "🎹 Select your style 🎸",
@@ -28,13 +32,13 @@ params = {
 "temperature":temperature
 }
 
-
-response = requests.get(url, params).json()
-print(response)
-# fare = round(response.json()['fare'])
-
-st.markdown(f'# Nothing to show here yet :)')
-st.set_page_config(
-        page_title="MIDI to WAV",
-        page_icon="musical_note",
-        initial_sidebar_state="collapsed")
+with st.spinner(f"Transcribing to FluidSynth"):
+        response = requests.get(url, params).json()
+        midi_data = pretty_midi.PrettyMIDI(response)
+        audio_data = midi_data.fluidsynth()
+        audio_data = np.int16(
+            audio_data / np.max(np.abs(audio_data)) * 32767 * 0.9
+        )
+        virtualfile = io.BytesIO()
+        wavfile.write(virtualfile, 44100, audio_data)
+    st.audio(virtualfile)
