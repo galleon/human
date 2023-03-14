@@ -9,7 +9,8 @@ from magenta.models.music_vae import configs
 from magenta.models.music_vae.trained_model import TrainedModel
 from magenta.music import concatenate_sequences
 from starlette.responses import Response
-from magenta.music.midi_io import note_sequence_to_midi_file
+from magenta.music.midi_io import note_sequence_to_pretty_midi
+import pretty_midi
 import mido
 
 
@@ -100,11 +101,17 @@ async def generate_music(style: str, num_bars: int = 48, temperature: float = 1)
     fix_instruments_for_concatenation(seqs)
     interp_ns = concatenate_sequences(seqs)
 
-    midi_file = note_sequence_to_midi_file(interp_ns, "output.mid")
-
-    suntzu = midi_to_json(midi_file)
-
-    return suntzu
+    #Conversion start, to send through API
+    test = note_sequence_to_pretty_midi(interp_ns)
+    tracks_dict = {}
+    for i, track in enumerate(test.instruments):
+        tracks_dict[f"track_{i+1}"] = {
+            "program": track.program,
+            "is_drum": track.is_drum,
+            "notes": [{"pitch": note.pitch, "start": note.start, "end": note.end, "velocity": note.velocity}
+                    for note in track.notes]
+        }
+    return tracks_dict
 
 @app.get("/")
 async def root():

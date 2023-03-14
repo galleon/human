@@ -7,7 +7,7 @@ import json
 import mido
 
 st.set_page_config(
-        page_title="MIDI to WAV",
+        page_title="🔥",
         page_icon="musical_note",
         initial_sidebar_state="expanded")
 st.markdown(f"<h1 style='text-align: center;'> 🤖 Music Generator 🤖 </h1>", unsafe_allow_html=True)
