@@ -98,10 +98,10 @@ async def generate_music(style: str, num_bars: int = 48, temperature: float = 1)
      #   a=str(i.notes[0])
       #  break
     #test = {"Salut" : a}
-    a = str(seqs)
-    test = {"test" : a }
+#     a = str(seqs)
+#     test = {"test" : a }
 
-    return test #interp_ns #Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
+    return seqs #interp_ns #Response(content=interp_ns.tobytes(), media_type="audio/sp-midi")
 
 @app.get("/")
 async def root():
