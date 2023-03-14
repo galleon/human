@@ -3,6 +3,7 @@ import numpy as np
 import requests
 import streamlit as st
 import pygame
+import json
 
 st.set_page_config(
         page_title="MIDI to WAV",
